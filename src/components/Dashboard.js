@@ -272,7 +272,6 @@ const Dashboard = () => {
             <Button onClick={handleLogout} type="primary">Logout</Button>
           </div>
         </Header>
-
         <Content className="m-4">
           {renderContent()}  {/* Render dynamic content based on selected menu */}
         </Content>
