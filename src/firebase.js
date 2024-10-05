@@ -1,11 +1,10 @@
-// Import the functions you need from the SDKs you need
+// Import the functions you need from the SDKs
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, GoogleAuthProvider } from "firebase/auth";  // Added for authentication
+import { getFirestore } from "firebase/firestore";  // Added for Firestore
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCzkctLOhTLaUN4KmP14n2RJ_YMVo0NCIg",
   authDomain: "solaroptix-6501a.firebaseapp.com",
@@ -19,3 +18,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth(app);  // Initialize Firebase Authentication
+const provider = new GoogleAuthProvider();  // Google Auth Provider
+const db = getFirestore(app);  // Firestore for database functionality
+
+// Export Firebase services for use in your app
+export { analytics, auth, provider, db };
