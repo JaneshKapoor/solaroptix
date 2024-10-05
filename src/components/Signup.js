@@ -1,10 +1,11 @@
 // src/components/Signup.js
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';  // Create account and Google auth
-import { auth, provider } from '../firebase';  // Firebase authentication
-import { Button, Input } from 'antd';  // Ant Design UI
-import { toast } from 'react-toastify';  // For notifications
-import { useNavigate } from 'react-router-dom';  // For navigation
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, provider, db } from '../firebase';  // Import Firestore (db)
+import { Button, Input } from 'antd';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { doc, setDoc } from 'firebase/firestore';  // Firestore methods
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +15,19 @@ const Signup = () => {
   // Handle Email/Password Sign Up
   const handleSignup = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("Account created successfully!");
-      navigate('/dashboard');  // Redirect to dashboard after sign-up
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Create a user document in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date(),
+        photoURL: user.photoURL
+      });
+
+      toast.success("Signup Successful! User doc created.");
+      navigate('/dashboard');
     } catch (error) {
       toast.error("Sign-up failed: " + error.message);
     }
@@ -25,15 +36,23 @@ const Signup = () => {
   // Handle Google Sign Up
   const handleGoogleSignup = async () => {
     try {
-      await signInWithPopup(auth, provider);
-      toast.success("Signed up with Google!");
-      navigate('/dashboard');  // Redirect to dashboard after sign-up
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+      
+      // Create a user document in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date(),
+      });
+
+      toast.success("Signup Successful with Google! User doc created.");
+      navigate('/dashboard');
     } catch (error) {
       toast.error("Google sign-up failed: " + error.message);
     }
   };
 
-  // Navigate to Login page if user already has an account
   const handleNavigateToLogin = () => {
     navigate('/');
   };
