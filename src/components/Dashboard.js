@@ -1,17 +1,20 @@
 // src/components/Dashboard.js
 import React from 'react';
-import { Button, Card, Progress, Switch, Layout, Menu } from 'antd';  // Ant Design components
+import { Button, Card, Progress, Switch, Layout, Menu, Avatar } from 'antd';  // Ant Design components
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LineChartOutlined, PieChartOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
+import { useAuthState } from 'react-firebase-hooks/auth';  // Firebase hook to get user data
+import icon from '../assets/Icon.png';  // Import SolarOptix logo
 
 const { Header, Content, Sider } = Layout;
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);  // Get user info (photoURL and displayName)
 
   // Handle logout functionality
   const handleLogout = async () => {
@@ -26,8 +29,12 @@ const Dashboard = () => {
 
   return (
     <Layout className="min-h-screen">
+      {/* Sidebar */}
       <Sider collapsible>
-        <div className="p-4 text-center text-white text-xl">SolarOptix</div>
+        <div className="flex flex-col items-center p-4 text-white text-xl">
+          <img src={icon} alt="SolarOptix Logo" className="w-10 h-10 mb-2" />  {/* SolarOptix logo */}
+          <span>SolarOptix</span>
+        </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<LineChartOutlined />}>
             Overview
@@ -47,10 +54,17 @@ const Dashboard = () => {
         </Menu>
       </Sider>
 
+      {/* Main Layout */}
       <Layout className="site-layout">
         <Header className="bg-white shadow-md p-4 flex justify-between items-center">
           <div className="text-lg font-semibold">Dashboard</div>
-          <Button onClick={handleLogout} type="primary">Logout</Button>
+
+          {/* User Profile Section */}
+          <div className="flex items-center">
+            <Avatar src={user?.photoURL} size="small" className="mr-2" />  {/* User's photoURL */}
+            <span className="mr-4">{user?.displayName || "User"}</span>  {/* User's displayName */}
+            <Button onClick={handleLogout} type="primary">Logout</Button>
+          </div>
         </Header>
 
         <Content className="m-4">

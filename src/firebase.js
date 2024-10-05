@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";  // Added for authentication
+import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth";  // Added for authentication
 import { getFirestore } from "firebase/firestore";  // Added for Firestore
 
 // Your web app's Firebase configuration
@@ -21,6 +21,10 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);  // Initialize Firebase Authentication
 const provider = new GoogleAuthProvider();  // Google Auth Provider
 const db = getFirestore(app);  // Firestore for database functionality
+
+// Ensure user session persistence (local persistence across tabs and browser sessions)
+setPersistence(auth, browserLocalPersistence);
+
 
 // Export Firebase services for use in your app
 export { analytics, auth, provider, db };
