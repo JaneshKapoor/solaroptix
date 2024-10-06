@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 const Insights = () => {
   const [data, setData] = useState([]);  // State to hold CSV data
-  const [calculatedData, setCalculatedData] = useState([]);  // State to hold calculated units
+  // const [calculatedData, setCalculatedData] = useState([]);  // State to hold calculated units
 
   // Define table columns for CSV content
   const columns = [
